@@ -884,12 +884,12 @@ endfunction
 
 let s:event = {}
 
-function! fzf#event#get() abort
+function! fzf#vim#get_event() abort
   return s:event
 endfunction
 
 function! s:ag_handler(name, lines) abort
-  "autocmd User FzfQuery call histadd('/', fzf#event#get().query)
+  "autocmd User FzfQuery call histadd('/', fzf#vim#get_event().query)
   if empty(a:lines)
     return
   endif
@@ -995,7 +995,7 @@ function! fzf#vim#grep(grep_command, ...)
   let name    = join(words, '-')
   let capname = join(map(words, 'toupper(v:val[0]).v:val[1:]'), '')
   let opts = {
-  \ 'options': ['--ansi', '--prompt', capname.'> ',
+  \ 'options': ['--print-query', '--ansi', '--prompt', capname.'> ',
   \             '--multi', '--bind', 'alt-a:select-all,alt-d:deselect-all',
   \             '--delimiter', ':', '--preview-window', '+{2}/2']
   \}
@@ -1034,7 +1034,7 @@ function! fzf#vim#grep2(command_prefix, query, ...)
   let fallback = s:is_win ? '' : ' || :'
   let opts = {
   \ 'source':  s:is_win ? 'cd .' : ':',
-  \ 'options': ['--ansi', '--prompt', toupper(name).'> ', '--query', a:query,
+  \ 'options': ['--print-query', '--ansi', '--prompt', toupper(name).'> ', '--query', a:query,
   \             '--disabled',
   \             '--multi', '--bind', 'alt-a:select-all,alt-d:deselect-all',
   \             '--delimiter', ':', '--preview-window', '+{2}/2']
