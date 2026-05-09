@@ -882,7 +882,33 @@ function! s:ag_to_qf(line)
   return dict
 endfunction
 
-function! s:ag_handler(name, lines)
+let s:event = {}
+
+function! fzf#event#get() abort
+  return s:event
+endfunction
+
+function! s:ag_handler(name, lines) abort
+  "autocmd User FzfQuery call histadd('/', fzf#event#get().query)
+  if empty(a:lines)
+    return
+  endif
+
+  let query = a:lines[0]
+  let lines = a:lines[1:]
+
+  let s:event = {'query': query}
+
+  try
+    doautocmd <nomodeline> User FzfQuery
+  finally
+    let s:event = {}
+  endtry
+
+  return s:_ag_handler(a:name, lines)
+endfunction
+
+function! s:_ag_handler(name, lines)
   if len(a:lines) < 2
     return
   endif
